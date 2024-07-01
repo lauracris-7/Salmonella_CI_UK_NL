@@ -1,5 +1,6 @@
-# Salmonella: Conditional Incicence (CI) UK - NL
-Ojective of the analysis: The code does look at how the risk of salmonellosis in humans depends on weather variables from historical data from England and Wales. It applies the same methodology in the Netherlands for comparison.
+# Salmonella: Conditional Incidence (CI) UK - NL
+by Laura C. Gonzalez Villeta, under the supervision of Giovanni Lo Iacono
+Objective of the analysis: The code does look at how the risk of salmonellosis in humans depends on weather variables from historical data from England and Wales. It applies the same methodology in the Netherlands for comparison.
 
 ## Contents:
 1. Conditional_probability_analysis_and_plots_UK.R: conditional probability calculated from UK data and applied to UK data
@@ -16,7 +17,7 @@ Resident information: Sum_ByLab_1987_2016.csv. Yearly number of residents at pos
 ### Settings (lines of the code No.1, as an example)
 - Select time lag (line 49, variable "width"). Here 7 days by default
 - Select years of interest: "first_year" (line 54) and "last_year" (line 55). Here 2000 to 2016 by default for England and Wales and 2015 to 2019 in the Netherlands.
-- Select weather variables of interest ("variable_1", line 394; "variable_2", line 395; and "variable_3", line 396)
-- Set the size of weather bins (variable "delta_var3", lines 413 to 442; "delta_var1", lines 452 to 476; and "delta_var2", lines 485 to 525)
+- Select weather variables of interest ("variable_1", line 289; "variable_2", line 290; and "variable_3", line 291)
+- Set the size of weather bins (variable "delta_var3", lines 308 to 337; "delta_var1", lines 347 to 371; and "delta_var2", lines 380 to 420)
 
 Built in R Version 4.2.2
