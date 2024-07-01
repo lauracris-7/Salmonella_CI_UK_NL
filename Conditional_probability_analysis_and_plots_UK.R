@@ -515,7 +515,7 @@ variable_3 <- "daylength"
       
       
       #----insert of breaks ---
-
+      # Weather variable 3
       dt_var3 = data.table(breaks_var3, val = breaks_var3)
       dt_var3 <- na.omit (dt_var3)
       setattr(dt_var3, "sorted", "breaks_var3")
@@ -525,7 +525,7 @@ variable_3 <- "daylength"
       weather_bins$break_var3<- dt_var3.2$val
       
       
-      # Relative humidity
+      # Weather variable 2
       dt_var2 = data.table(breaks_var2, val = breaks_var2)
       dt_var2 <- na.omit (dt_var2)
       setattr(dt_var2, "sorted", "breaks_var2")
@@ -536,7 +536,7 @@ variable_3 <- "daylength"
       
       
       
-      # Maximum air temperature
+      # Weather variable 1
       dt_var1 = data.table(breaks_var1, val = breaks_var3)
       dt_var1 <- na.omit (dt_var1)
       setattr(dt_var1, "sorted", "breaks_var1")
