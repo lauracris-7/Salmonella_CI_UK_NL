@@ -858,23 +858,6 @@ for (inner_select3 in c(inner_select3_min:inner_select3_max)){
 
 ############# Plots CI Quantile #############
 
-# In x, y, z order:
-# (1.) Mean_dewpoint_temperature, Mean_Precipitation, daylength
-# 1. Mean_air_temperature, Mean_Precipitation, daylength
-# 2. Mean_dewpoint_temperature, Relative_humidity, daylength
-# 3. Mean_air_temperature, Mean_wind_speed, daylength
-# 4. Mean_dewpoint_temperature, Mean_surface_air_pressure, Mean_Precipitation
-# 5. Maximum_air_temperature, Mean_Precipitation, Global_radiation
-# 6. "Mean_air_temperature", "Mean_Precipitation", "Mean_wind_speed"  Additional combination that did NOT work well to see the CI plot.
-
-
-variable_1 <- "Maximum_air_temperature"
-variable_2 <- "Mean_Precipitation"
-variable_3 <- "Global_radiation"
-
-
-
-
 Conditional_incidence_quantiles$incidence <-Conditional_incidence_quantiles$counts/Conditional_incidence_quantiles$residents_tot
 
 # Normalized incidence per 10,000,000 inhabitants to normalize our plots later
