@@ -424,8 +424,8 @@ variable_3 <- "daylength"
       
       
       # Create a data frame to fill with
-      var_x_loc_df <-data.frame(character(), character(), character(), numeric(), numeric(), numeric())
-      colnames(var_x_loc_df) <-c(variable_3, variable_2, variable_1,"counts","residents","residents_tot")
+      estratification_weather_cases <-data.frame(character(), character(), character(), numeric(), numeric(), numeric())
+      colnames(estratification_weather_cases) <-c(variable_3, variable_2, variable_1,"counts","residents","residents_tot")
       
       
       
@@ -495,17 +495,17 @@ variable_3 <- "daylength"
                   )
                   
                   colnames(data_df) <-c(variable_3, variable_2, variable_1,"counts","residents","residents_tot")
-                  var_x_loc_df <-rbind(var_x_loc_df, data_df) 
+                  estratification_weather_cases <-rbind(estratification_weather_cases, data_df) 
                   print(c(inner_select1, inner_select2,inner_select3, Total_cases)) 
                 }
               }
             }
           }
         }
-      } # output: var_x_loc_df
+      } # output: estratification_weather_cases
       
-       write.table(var_x_loc_df, paste(variable_3,"_",variable_2,"_",variable_1,"_",width_char,
-                                      "_Simulated_for_rec_UNIFORM_narrowedvalues_DETREND.csv",sep=""), col.names = NA, row.names = TRUE , sep = ",",eol = "\n") # will be used in code No.2     
+      write.table(estratification_weather_cases, paste(variable_3,"_",variable_2,"_",variable_1,"_",width_char,
+                                      "_Simulated_for_rec_UNIFORM_narrowedvalues_DETREND.csv",sep=""), col.names = NA, row.names = TRUE , sep = ",",eol = "\n") # will be used in code No.2
       
       ############ Reconstruction from Conditional probability
       # The code does look at how the risk of salmonellosis in humans depends on environmental variables
@@ -513,57 +513,57 @@ variable_3 <- "daylength"
       Env_laboratory_data$year <-year(as.Date(Env_laboratory_data$Date))
       
       
-      time_series<-c()
+      modelled_cases<-c()
       
       
       #----insert of breaks ---
 
-      dt_day = data.table(breaks_var3, val = breaks_var3)
-      dt_day <- na.omit (dt_day)
-      setattr(dt_day, "sorted", "breaks_var3")
-      dt_day2 <- dt_day[J(Env_laboratory_data[[variable_3]]), roll = "nearest"] 
+      dt_var3 = data.table(breaks_var3, val = breaks_var3)
+      dt_var3 <- na.omit (dt_var3)
+      setattr(dt_var3, "sorted", "breaks_var3")
+      dt_var3.2 <- dt_var3[J(Env_laboratory_data[[variable_3]]), roll = "nearest"] 
       
-      variable_df_6_2 <- as.data.frame(Env_laboratory_data[,c("PostCode","Date", "residents")])
-      variable_df_6_2$day_break<- dt_day2$val
+      weather_bins <- as.data.frame(Env_laboratory_data[,c("PostCode","Date", "residents")])
+      weather_bins$break_var3<- dt_var3.2$val
       
       
       # Relative humidity
-      dt_hum = data.table(breaks_var2, val = breaks_var2)
-      dt_hum <- na.omit (dt_hum)
-      setattr(dt_hum, "sorted", "breaks_var2")
-      dt_hum2 <- dt_hum[J(Env_laboratory_data[[variable_2]]), roll = "nearest"]
+      dt_var2 = data.table(breaks_var2, val = breaks_var2)
+      dt_var2 <- na.omit (dt_var2)
+      setattr(dt_var2, "sorted", "breaks_var2")
+      dt_var2.2 <- dt_var2[J(Env_laboratory_data[[variable_2]]), roll = "nearest"]
       
       
-      variable_df_6_2$hum_break<- dt_hum2$val
+      weather_bins$break_var2<- dt_var2.2$val
       
       
       
       # Maximum air temperature
-      dt_temp = data.table(breaks_var1, val = breaks_var3)
-      dt_temp <- na.omit (dt_temp)
-      setattr(dt_temp, "sorted", "breaks_var1")
-      dt_temp2  <- dt_temp[J(Env_laboratory_data[[variable_3]]), roll = "nearest"]
+      dt_var1 = data.table(breaks_var1, val = breaks_var3)
+      dt_var1 <- na.omit (dt_var1)
+      setattr(dt_var1, "sorted", "breaks_var1")
+      dt_var1.2  <- dt_var1[J(Env_laboratory_data[[variable_3]]), roll = "nearest"]
       
-      variable_df_6_2$temp_break<- dt_temp2$val
-      colnames(variable_df_6_2) <- c("PostCode","Date", "residents", variable_3, variable_2, variable_1)
+      weather_bins$break_var1<- dt_var1.2$val
+      colnames(weather_bins) <- c("PostCode","Date", "residents", variable_3, variable_2, variable_1)
       
       
-      variable_df_dis3 <- left_join (variable_df_6_2,var_x_loc_df, by= c(variable_2, variable_1, variable_3))
-      variable_df_dis3 <- na.omit(variable_df_dis3)
-      variable_df_dis3 <- distinct(variable_df_dis3)
-      variable_df_dis3 <-variable_df_dis3[order(as.Date(variable_df_dis3$Date)),]
+      CI_per_weather_bin <- left_join (weather_bins,estratification_weather_cases, by= c(variable_2, variable_1, variable_3))
+      CI_per_weather_bin <- na.omit(CI_per_weather_bin)
+      CI_per_weather_bin <- distinct(CI_per_weather_bin)
+      CI_per_weather_bin <-CI_per_weather_bin[order(as.Date(CI_per_weather_bin$Date)),]
       
       #colnames(variable_df_dis)[6] ="residents"
-      colnames(variable_df_dis3)[8] ="residents" # not used. No. of people exposed to the same weather conditions in an area with at least one case.
-      colnames(variable_df_dis3)[9] ="residents_total" 
+      colnames(CI_per_weather_bin)[8] ="residents" # not used. No. of people exposed to the same weather conditions in an area with at least one case.
+      colnames(CI_per_weather_bin)[9] ="residents_total" 
       
       # calculation of all the potential incidence based on the weather conditions of the area. The counts used as numerator correspond to the simulation of cases per weather condition.
-      variable_df_dis3$incidence <-variable_df_dis3$counts/variable_df_dis3$residents_total 
-      lambda <-variable_df_dis3$incidence
-      comp_cases <-lambda*variable_df_dis3$residents.x # estimation of the "real" incidence based on the possible cases due to weather and the residents number in the catchment area
+      CI_per_weather_bin$incidence <-CI_per_weather_bin$counts/CI_per_weather_bin$residents_total 
+      lambda <-CI_per_weather_bin$incidence
+      comp_cases <-lambda*CI_per_weather_bin$residents.x # estimation of the "real" incidence based on the possible cases due to weather and the residents number in the catchment area
       
-      time_series_1 <-data.frame(variable_df_dis3$Date, comp_cases, lambda, variable_df_dis3$PostCode)
-      colnames(time_series_1) <-c("Date","Cases","Lambda","Lab")
+      modelled_cases <-data.frame(CI_per_weather_bin$Date, comp_cases, lambda, CI_per_weather_bin$PostCode)
+      colnames(modelled_cases) <-c("Date","Cases","Lambda","Lab")
 
       
       
@@ -575,23 +575,23 @@ variable_3 <- "daylength"
       
 
       
-      time_series_1$Date <- as.Date(time_series_1$Date)
-      colnames(time_series_1) <-c("Date","Cases","Lambda","PostCode")
-      time_series_1$Year <-year(time_series_1$Date)
-      time_series_1 <-time_series_1[order(time_series_1$Date, na.last = NA),]
+      modelled_cases$Date <- as.Date(modelled_cases$Date)
+      colnames(modelled_cases) <-c("Date","Cases","Lambda","PostCode")
+      modelled_cases$Year <-year(modelled_cases$Date)
+      modelled_cases <-modelled_cases[order(modelled_cases$Date, na.last = NA),]
       
-      time_series <-merge(time_series_1, population_df, by=c('Year','PostCode')) # Add residents information to the time series.
-      time_series <-na.omit(time_series)
+      modelled_cases <-merge(modelled_cases, population_df, by=c('Year','PostCode')) # Add residents information to the time series.
+      modelled_cases <-na.omit(modelled_cases)
       
       
       ### sum cases per PC 
-      time_series <- aggregate (Cases ~ Date, time_series, sum) 
+      modelled_cases <- aggregate (Cases ~ Date, modelled_cases, sum) 
       
-      ts_roll_mean2 <- time_series %>% mutate (rolling_mean2= slider::slide_mean(Cases, before=3 , after=3 )) %>% ungroup()
-      time_series$rolling_mean <-ts_roll_mean2$rolling_mean2  
+      ts_roll_mean2 <- modelled_cases %>% mutate (rolling_mean2= slider::slide_mean(Cases, before=3 , after=3 )) %>% ungroup()
+      modelled_cases$rolling_mean <-ts_roll_mean2$rolling_mean2  
       
-      time_series_summary <-data.frame(time_series$Date, time_series$rolling_mean, rep("Model",times=length(time_series[,1]))) 
-      colnames(time_series_summary)<-c("Date","Mean","source")
+      modelled_cases_summary <-data.frame(modelled_cases$Date, modelled_cases$rolling_mean, rep("Model",times=length(modelled_cases[,1]))) 
+      colnames(modelled_cases_summary)<-c("Date","Mean","source")
       
       ### Real cases
       ## add all cases per date
@@ -605,18 +605,18 @@ variable_3 <- "daylength"
       colnames(real_cases_summary) <-c("Date","Mean","source")              
       
       real_cases_summary$Date<-as.factor(real_cases_summary$Date)
-      time_series_summary$Date <- as.factor(time_series_summary$Date)
+      modelled_cases_summary$Date <- as.factor(modelled_cases_summary$Date)
       
-      time_series_all <-rbind(time_series_summary, real_cases_summary)
+      modelled_cases_all <-rbind(modelled_cases_summary, real_cases_summary)
       
       
       
       ######## Plots #####
       
 
-      time_series_all$Date <- as.Date(time_series_all$Date)
+      modelled_cases_all$Date <- as.Date(modelled_cases_all$Date)
       
-      time_series_plot <-ggplot(time_series_all, aes(x=Date, y=Mean, colour=source, group=2))+
+      modelled_cases_plot <-ggplot(modelled_cases_all, aes(x=Date, y=Mean, colour=source, group=2))+
         
                                 geom_line(linewidth=0.75) + 
                                 xlab("Date") + ylab("Salmonellosis Cases")
@@ -627,11 +627,11 @@ variable_3 <- "daylength"
       
       
       ############## Average per day of the year 
-      time_series$yday <-as.factor(yday(time_series$Date))
+      modelled_cases$yday <-as.factor(yday(modelled_cases$Date))
       
-      time_series_average1 <-ddply(time_series,~yday, summarise, mean=mean(rolling_mean)) # mean of all cases for the same day of the year for the 17 years of study
-      time_series_quantile1 <-ddply(time_series,~yday, function (x) quantile(x$rolling_mean , c(.25,.5,.75))) # quantiles of cases for all the years for the same day of the year
-      time_series_average2 <-cbind(time_series_average1,time_series_quantile1[,-1])
+      modelled_cases_average1 <-ddply(modelled_cases,~yday, summarise, mean=mean(rolling_mean)) # mean of all cases for the same day of the year for the 17 years of study
+      modelled_cases_quantile1 <-ddply(modelled_cases,~yday, function (x) quantile(x$rolling_mean , c(.25,.5,.75))) # quantiles of cases for all the years for the same day of the year
+      modelled_cases_average2 <-cbind(modelled_cases_average1,modelled_cases_quantile1[,-1])
       
       
       real_cases_national$yday <-as.factor(yday(as.Date(as.character(real_cases_national$date))))
@@ -644,7 +644,7 @@ variable_3 <- "daylength"
       
       df1 <-data.frame(real_cases_average,rep("Cases",times=length(real_cases_average[,1])))
       colnames(df1) <-c("Day","Mean","f_quant","median","s_quant","source")
-      df2 <-data.frame(time_series_average2,rep("Model",times=length(time_series_average2[,1])))
+      df2 <-data.frame(modelled_cases_average2,rep("Model",times=length(modelled_cases_average2[,1])))
       colnames(df2) <-c("Day","Mean","f_quant","median","s_quant","source")
       
       average_data <-rbind(df1,df2)
@@ -672,62 +672,6 @@ variable_3 <- "daylength"
       
       # Save the plot
 
-
- 
-
-##### Plots of the recostruction of salmonellosis cases with other time lags #####
-df2 <- c()
-
-for (width_char in c(7,14,30,60)) { 
-
-time_series_1 <- read.csv(paste0(variable_3,"_",variable_1,"_",variable_2,"_",width_char,"_reconstructed_detrend_2000-2016.csv"))
-time_series_1 <-time_series_1 [,-1]
-
-time_series_1$Date <- as.Date(time_series_1$Date)
-colnames(time_series_1) <-c("Date","Cases","Lambda","PostCode")
-time_series_1$Year <-year(time_series_1$Date)
-time_series_1 <-time_series_1[order(time_series_1$Date, na.last = NA),]
-
-time_series <-merge(time_series_1, population_df, by=c('Year','PostCode')) # Add residents information to the time series.
-time_series <-na.omit(time_series)
-
-
-### sum cases per PC 
-time_series <- aggregate (Cases ~ Date, time_series, sum) 
-############## Average per day of the year 
-time_series$yday <-as.factor(yday(time_series$Date))
-
-time_series_average1 <-ddply(time_series,~yday, summarise, mean=mean(Cases)) # mean of all cases for the same day of the year for the 17 years of study
-time_series_quantile1 <-ddply(time_series,~yday, function (x) quantile(x$Cases , c(.25,.5,.75))) # quantiles of cases for all the years for the same day of the year
-time_series_average2 <-cbind(time_series_average1,time_series_quantile1[,-1])
-
-all_lags <-data.frame(time_series_average2,rep(width_char,times=length(time_series_average2[,1])))
-
-
-df2 <- rbind(df2,all_lags)
-
-}
-
-colnames(df2) <-c("Day","Mean","f_quant","median","s_quant","source")
-
-average_data <-rbind(df1,df2)
-average_data$Day <-as.numeric(average_data$Day)
-
-variable_1.char <- stri_replace_all_fixed(variable_1, "_", " ")
-variable_2.char <- stri_replace_all_fixed(variable_2, "_", " ")
-variable_3.char <- stri_replace_all_fixed(variable_3, "_", " ")
-
-
-
-yearly_average <-ggplot(average_data, aes(x=Day, y=Mean, colour=source))+
-                        geom_line(linewidth=0.8)+ 
-                        xlab("Date") + ylab("Salmonellosis Cases") +
-                        
-                        ggtitle(paste0(variable_1.char,", ", variable_2.char,", ", variable_3.char))
-
-
-
-# Save the plot
 
 
 #### 4. Conditional probability Quantile ####
