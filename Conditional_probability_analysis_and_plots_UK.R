@@ -675,21 +675,6 @@ variable_3 <- "daylength"
 #### 4. Conditional probability Quantile ####
 # The code looks at how the risk of salmonellosis in humans on a quantile division of the range of the environmental variables
 
-
-############# Manually do the weather combinations of interest identified in the reconstruction of the uniform quantiles #############
-# Change here for doing other combinations
-
-# 1. Mean_dewpoint_temperature, Mean_Precipitation, daylength
-# 2. Mean_air_temperature, Mean_Precipitation, daylength
-# 3. Mean_dewpoint_temperature, Relative_humidity, daylength
-# 4. Mean_air_temperature, Mean_wind_speed, daylength
-# 5. Mean_dewpoint_temperature, Mean_surface_air_pressure, Mean_Precipitation
-# 6. Maximum_air_temperature, Mean_Precipitation, Global_radiation
-# 7. "Mean_air_temperature", "Mean_Precipitation", "Mean_wind_speed"  Additional combination that did NOT work well to see the CI plot.
-
-variable_1 <- "Mean_air_temperature"
-variable_2 <- "Relative_humidity"
-variable_3 <- "daylength"
       
 # Select the variables of interest:
       
@@ -709,7 +694,6 @@ bins_size_var1 <-0.1 # temp, dewpoint
 bins_size_var2 <-0.25 # precip, widspeed, air pressure
 bins_size_var3 <-0.25 # DL, global radiation, windspeed
 
-#bins_size_var2 <- 1 #for removing precipitation from the analysis
 
 # Divisions for weather factor 3
 
