@@ -504,7 +504,8 @@ variable_3 <- "daylength"
         }
       } # output: var_x_loc_df
       
-      
+       write.table(var_x_loc_df, paste(variable_3,"_",variable_2,"_",variable_1,"_",width_char,
+                                      "_Simulated_for_rec_UNIFORM_narrowedvalues_DETREND.csv",sep=""), col.names = NA, row.names = TRUE , sep = ",",eol = "\n") # will be used in code No.2     
       
       ############ Reconstruction from Conditional probability
       # The code does look at how the risk of salmonellosis in humans depends on environmental variables
