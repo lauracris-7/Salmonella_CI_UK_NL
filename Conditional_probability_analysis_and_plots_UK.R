@@ -222,8 +222,6 @@ colnames(catchment_population_df) <-c("PostCode","col2","col3",
 
 Env_Pathogen_data0 <- ddply (Env_Pathogen_data_all2, ~Date, summarise, cases=sum(Cases)) # cases at national level per day
 
-################### Perform wavelet analysis for the selected years ###################
-
 salmonella_data_national<-Env_Pathogen_data0[order(as.Date(Env_Pathogen_data0$Date)),]       # sort from least recent to most recent 
 dt0<-1
 
