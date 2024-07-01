@@ -862,7 +862,6 @@ Conditional_incidence_quantiles$incidence <-Conditional_incidence_quantiles$coun
 
 # Normalized incidence per 10,000,000 inhabitants to normalize our plots later
 norm <- 1/1e7 # time steps included in the data itself, so no need to divide the number of days
-labelling_char<-c()
 
 
 
